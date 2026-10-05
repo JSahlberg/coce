@@ -147,7 +147,7 @@ describe('Validation Module', function() {
   });
 
   describe('validateProviders', function() {
-    const availableProviders = ['gb', 'aws', 'ol', 'orb'];
+    const availableProviders = ['bokinfo', 'gb', 'aws', 'ol', 'orb'];
 
     it('should return default providers when none specified', function() {
       const result = validateProviders(undefined, availableProviders);
@@ -174,16 +174,16 @@ describe('Validation Module', function() {
     });
 
     it('should accept valid multiple providers', function() {
-      const result = validateProviders('gb,aws,ol', availableProviders);
+      const result = validateProviders('bokinfo,gb,aws,ol', availableProviders);
       expect(result.valid).to.be.true;
-      expect(result.providers).to.deep.equal(['gb', 'aws', 'ol']);
+      expect(result.providers).to.deep.equal(['bokinfo', 'gb', 'aws', 'ol']);
     });
 
     it('should reject invalid provider', function() {
       const result = validateProviders('invalid', availableProviders);
       expect(result.valid).to.be.false;
       expect(result.error).to.include('Invalid providers: invalid');
-      expect(result.error).to.include('Available: gb, aws, ol, orb');
+      expect(result.error).to.include('Available: bokinfo, gb, aws, ol, orb');
     });
 
     it('should reject multiple invalid providers', function() {

@@ -8,7 +8,7 @@ CONFIG_FILE="config.json"
 cat > "$CONFIG_FILE" << EOF
 {
   "port": "${COCE_PORT:-8080}",
-  "providers": [$(echo "${COCE_PROVIDERS:-gb,aws,ol}" | sed 's/,/","/g' | sed 's/^/"/' | sed 's/$/"/')],
+  "providers": [$(echo "${COCE_PROVIDERS:-bokinfo,gb,aws,ol}" | sed 's/,/","/g' | sed 's/^/"/' | sed 's/$/"/')],
   "timeout": ${COCE_TIMEOUT:-8000},
   "redis": {
     "host": "${REDIS_HOST:-redis}",
@@ -18,6 +18,9 @@ cat > "$CONFIG_FILE" << EOF
   "cache": {
     "path": "${COCE_CACHE_PATH:-/app/covers}",
     "url": "${COCE_CACHE_URL:-http://localhost:8080/covers}"
+  },
+  "bokinfo": {
+    "timeout": ${COCE_BOKINFO_TIMEOUT:-86400}
   },
   "gb": {
     "timeout": ${COCE_GB_TIMEOUT:-86400}
@@ -39,7 +42,7 @@ cat > "$CONFIG_FILE" << EOF
 }
 EOF
 
-echo "Generated config.json with $(echo "${COCE_PROVIDERS:-gb,aws,ol}" | tr ',' ' ') providers"
+echo "Generated config.json with $(echo "${COCE_PROVIDERS:-bokinfo,gb,aws,ol}" | tr ',' ' ') providers"
 
 # Execute the main command
 exec "$@"

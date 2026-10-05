@@ -10,7 +10,7 @@
          ids.push($(this).attr("class"));
        });
        if (ids.length == 0) return;
-       var coceClient = new CoceClient('http://localhost:8080', 'ol,gb,aws');
+       var coceClient = new CoceClient('http://localhost:8080', 'bokinfo,ol,gb,aws');
        coceClient.fetch(ids, function(id, url) {
          $("[id^=coce-thumbnail]."+id).each(function() {
            var img = document.createElement("img");

@@ -43,7 +43,7 @@ describe('Configuration', function() {
       expect(originalConfig.providers).to.be.an('array');
       expect(originalConfig.providers.length).to.be.greaterThan(0);
       
-      const validProviders = ['gb', 'aws', 'ol', 'orb'];
+      const validProviders = ['bokinfo', 'gb', 'aws', 'ol', 'orb'];
       originalConfig.providers.forEach(provider => {
         expect(validProviders).to.include(provider);
       });
@@ -75,6 +75,14 @@ describe('Configuration', function() {
         expect(originalConfig.aws).to.exist;
         expect(originalConfig.aws.timeout).to.be.a('number');
         expect(originalConfig.aws.imageSize).to.exist;
+      }
+    });
+
+    it('should have Bokinfo configuration', function() {
+      if (originalConfig.providers.includes('bokinfo')) {
+        expect(originalConfig.bokinfo).to.exist;
+        expect(originalConfig.bokinfo.timeout).to.be.a('number');
+        expect(originalConfig.bokinfo.imageSize).to.exist;
       }
     });
 

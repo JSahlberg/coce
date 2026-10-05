@@ -160,7 +160,11 @@ describe('Performance and Edge Cases', function() {
       nock('https://images-na.ssl-images-amazon.com')
         .head(/.*/)
         .reply(404);
-        
+      
+      nock('https://www.bokinfo.se')
+        .head(/.*/)
+        .reply(404);  
+
       nock('http://openlibrary.org')
         .get('/api/books')
         .query(true)
@@ -301,6 +305,10 @@ describe('Performance and Edge Cases', function() {
         .replyWithError('Network error');
         
       nock('https://images-na.ssl-images-amazon.com')
+        .head(/.*/)
+        .reply(200);
+      
+      nock('https://www.bokinfo.se')
         .head(/.*/)
         .reply(200);
 

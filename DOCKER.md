@@ -9,7 +9,7 @@
 
 2. **Test the service:**
    ```bash
-   curl "http://localhost:8080/cover?id=9780415480635&provider=gb,aws,ol"
+   curl "http://localhost:8080/cover?id=9780415480635&provider=bokinfo,gb,aws,ol"
    ```
 
 ## Configuration
@@ -74,7 +74,7 @@ For production, override environment variables:
 docker-compose --env-file .env.prod up -d
 
 # Or set variables directly
-COCE_PROVIDERS=gb,aws,ol,orb \
+COCE_PROVIDERS=bokinfo,gb,aws,ol,orb \
 COCE_ORB_USER=myuser \
 COCE_ORB_KEY=mykey \
 docker-compose up -d

@@ -199,6 +199,135 @@ CoceFetcher.prototype.aws = function awsFetcher(ids) {
 };
 
 /**
+ * Retrieve an ID from Bokinfo. Cover image direct URL are tested.
+ * @method bokinfo_http
+ * @param {Array} ids The resource IDs to request to Bokinfo
+ */
+CoceFetcher.prototype.bokinfo = function bokinfoFetcher(ids) {
+  const repo = this;
+  const providerName = 'bokinfo';
+
+  logger.info('Starting Bokinfo provider fetch', {
+    provider: providerName,
+    ids,
+    count: ids.length,
+  });
+
+  let i = 0;
+  const checkoneurl = () => {
+    const id = ids[i];
+    let search = id;
+
+    // If ISBN10, transform it into ISBN13
+    search = search.replace(/-/g, '');
+
+    if (search.length === 10) {
+      search = '978' + search.slice(0, -1);
+      let checksum = 0;
+      for (var x = 0; x < search.length; x++) {
+        if (x === 0) {
+          checksum = checksum + parseInt(search[x], 10);
+        } else if (x % 2 === 0) {
+          checksum = checksum + parseInt(search[x], 10);
+        } else {
+          checksum = checksum + (parseInt(search[x], 10) * 3);
+        }
+      }
+      checksum = 10 - (checksum % 10);
+      if (checksum == 10) {
+        checksum = 0;
+      }
+      
+      search += checksum.toString();
+
+      logger.debug('ISBN10 to ISBN13 conversion', {
+        provider: providerName,
+        original: id,
+        converted: search,
+        checksum,
+      });
+    }
+
+    const opts = {
+      hostname: 'www.bokinfo.se',
+      method: 'HEAD',
+      headers: { 'user-agent': 'Mozilla/5.0' },
+      path: `/images/products/medium/${search.substr(0, 6)}/${search}.jpg`,
+    };
+
+    const req = https.get(opts, (res) => {
+      const url = `https://${opts.hostname}${opts.path}`;
+
+      logger.debug('Bokinfo response received', {
+        provider: providerName,
+        id,
+        statusCode: res.statusCode,
+        url,
+      });
+
+      if (res.statusCode === 200 || res.statusCode === 403) {
+        repo.addurl('bokinfo', id, url);
+        logger.debug('Bokinfo cover found', {
+          provider: providerName,
+          id,
+          url,
+          statusCode: res.statusCode,
+        });
+      } else {
+        logger.debug('Bokinfo cover not found', {
+          provider: providerName,
+          id,
+          statusCode: res.statusCode,
+        });
+      }
+
+      repo.increment();
+      i += 1;
+
+      // timeout for next request
+      if (i < ids.length) {
+        setTimeout(checkoneurl, 30);
+      } else {
+        logger.info('Bokinfo fetch completed', {
+          provider: providerName,
+          processed: ids.length,
+        });
+      }
+    });
+
+    req.on('error', (error) => {
+      logger.error('Bokinfo request failed', error, {
+        provider: providerName,
+        id,
+        url: `https://${opts.hostname}${opts.path}`,
+      });
+      repo.increment();
+      i += 1;
+      if (i < ids.length) setTimeout(checkoneurl, 30);
+    });
+
+    req.on('timeout', () => {
+      logger.warn('Bokinfo request timeout', {
+        provider: providerName,
+        id,
+        timeout: config.bokinfo.timeout || 'default',
+      });
+      req.destroy();
+      repo.increment();
+      i += 1;
+      if (i < ids.length) setTimeout(checkoneurl, 30);
+    });
+
+    // Set timeout if configured
+    if (config.bokinfo && config.bokinfo.timeout) {
+      req.setTimeout(config.bokinfo.timeout);
+    }
+  };
+
+  checkoneurl();
+};
+
+/**
  * Retrieve an ID from Google Books
  * @method gb
  * @param {Array} ids The resource IDs to request to Google Books

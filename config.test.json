@@ -1,6 +1,6 @@
 {
   "port": 8080,
-  "providers": ["gb", "aws", "ol"],
+  "providers": ["bokinfo", "gb", "aws", "ol", "orb"],
   "timeout": 5000,
   "redis": {
     "host": "localhost",
@@ -17,6 +17,10 @@
   "ol": {
     "timeout": 10000,
     "imageSize": "medium"
+  },
+  "bokinfo": {
+    "timeout": 10000,
+    "imageSize": "MediumImage"
   },
   "aws": {
     "imageSize": "MediumImage",

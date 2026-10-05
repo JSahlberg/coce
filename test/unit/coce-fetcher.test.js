@@ -253,6 +253,87 @@ describe('CoceFetcher', function() {
     });
   });
 
+  describe('Bokinfo Provider', function() {
+    it('should fetch covers from Bokinfo successfully', function(done) {
+      const ids = ['9780593956014'];
+      
+      // Mock the HEAD request to Bokinfo (correct ISBN13: 9780593956014)
+      nock('https://www.bokinfo.se')
+        .head('/images/products/medium/978059/9780593956014.jpg')
+        .reply(200);
+
+      fetcher.bokinfo(ids);
+      
+      setTimeout(() => {
+        expect(fetcher.url['9780593956014']).to.exist;
+        expect(fetcher.url['9780593956014']['bokinfo']).to.include('www.bokinfo.se');
+        done();
+      }, 300); // Increased timeout
+    });
+
+    it('should handle ISBN10 to ISBN13 conversion', function(done) {
+      const ids = ['059395601X']; // ISBN10
+      
+      // Should convert to ISBN13: 9780593956014 (correct checksum)
+      nock('https://www.bokinfo.se')
+        .head('/images/products/medium/978059/9780593956014.jpg')
+        .reply(200);
+
+      fetcher.bokinfo(ids);
+      
+      setTimeout(() => {
+        expect(fetcher.url['059395601X']).to.exist;
+        done();
+      }, 200);
+    });
+
+    it('should handle 403 responses from Bokinfo', function(done) {
+      const ids = ['9780593956014'];
+      
+      nock('https://www.bokinfo.se')
+        .head('/images/products/medium/978059/9780593956014.jpg')
+        .reply(403);
+
+      fetcher.bokinfo(ids);
+      
+      setTimeout(() => {
+        expect(fetcher.url['9780593956014']).to.exist;
+        expect(fetcher.url['9780593956014']['bokinfo']).to.include('www.bokinfo.se');
+        done();
+      }, 200);
+    });
+
+    it('should handle 404 responses from Bokinfo', function(done) {
+      const ids = ['9780593956014'];
+      
+      nock('https://www.bokinfo.se')
+        .head('/images/products/medium/978059/9780593956014.jpg')
+        .reply(404);
+
+      fetcher.bokinfo(ids);
+      
+      setTimeout(() => {
+        expect(Object.keys(fetcher.url)).to.have.length(0);
+        done();
+      }, 200);
+    });
+
+    it('should handle network errors for Bokinfo', function(done) {
+      const ids = ['9780593956014'];
+      
+      nock('https://www.bokinfo.se')
+        .head('/images/products/medium/978059/9780593956014.jpg')
+        .replyWithError('ECONNREFUSED');
+
+      fetcher.bokinfo(ids);
+      
+      setTimeout(() => {
+        expect(Object.keys(fetcher.url)).to.have.length(0);
+        done();
+      }, 200);
+    });
+  });
+
   describe('ORB Provider', function() {
     beforeEach(function() {
       // Ensure ORB config exists for tests

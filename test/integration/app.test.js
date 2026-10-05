@@ -105,6 +105,10 @@ describe('Coce Express App', function() {
           .head(/.*/)
           .reply(200);
           
+        nock('https://www.bokinfo.se')
+          .head(/.*/)
+          .reply(200);
+        
         nock('http://openlibrary.org')
           .get('/api/books')
           .query(true)
@@ -141,6 +145,10 @@ describe('Coce Express App', function() {
           .get('/books')
           .query(true)
           .reply(200, responses.googleBooks.valid);
+          
+        nock('https://www.bokinfo.se')
+          .head(/.*/)
+          .reply(200);
           
         nock('https://images-na.ssl-images-amazon.com')
           .head(/.*/)
@@ -208,6 +216,10 @@ describe('Coce Express App', function() {
           .head(/.*/)
           .reply(200);
 
+        nock('https://www.bokinfo.se')
+          .head(/.*/)
+          .reply(200);
+
         request(app)
           .get(`/cover?id=${isbn}&provider=gb,aws`)
           .expect(200)
@@ -226,6 +238,10 @@ describe('Coce Express App', function() {
           .reply(200, responses.googleBooks.valid);
           
         nock('https://images-na.ssl-images-amazon.com')
+          .head(/.*/)
+          .reply(200);
+        
+          nock('https://www.bokinfo.se')
           .head(/.*/)
           .reply(200);
 

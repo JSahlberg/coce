@@ -1,6 +1,6 @@
 {
   "port": "8080",
-  "providers": ["gb","aws","ol","orb"],
+  "providers": ["bokinfo","gb","aws","ol","orb"],
   "timeout": 8000,
   "redis": {
     "host": "127.0.0.1",
@@ -10,6 +10,10 @@
   "cache": {
     "path": "/home/myuser/covers",
     "url": "https://coce.myserver.fr/covers"
+  },
+  "bokinfo": {
+    "timeout": 86400,
+    "imageSize": "MediumSize"
   },
   "gb": {
     "timeout": 86400

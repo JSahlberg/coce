@@ -9,7 +9,7 @@ cover image is displayed in front of the resource. Those images are fetched
 automatically from providers, such as Google or Amazon. Providers propose web
 services to retrieve information on Books from an ID (ISBN for example).
 
-* [Bokinfo] (https://www.bokinfo.se)
+* [Bokinfo](https://www.bokinfo.se)
 * [Google API](https://developers.google.com/books/docs/dynamic-links)
 * [Amazon Product Advertising
   API](https://affiliate-program.amazon.com/gp/advertising/api/detail/main.html)

@@ -1,5 +1,5 @@
 {
-  "port": "8080",
+  "port": 8080,
   "providers": ["bokinfo","gb","aws","ol","orb"],
   "timeout": 8000,
   "redis": {
